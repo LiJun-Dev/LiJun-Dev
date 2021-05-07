@@ -1,0 +1,1 @@
+rsync -vaL --progress --delete -e 'ssh -i slots-team-ec2.pem' . ec2-user@slots-small-test.tuanguwen.com:/usr/share/nginx/html/simvegas/

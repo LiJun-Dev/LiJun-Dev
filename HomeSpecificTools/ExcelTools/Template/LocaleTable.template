@@ -1,0 +1,24 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+
+[System.Serializable]
+public class Table{{className}} : TableBase
+{
+    {{#each fieldArray}}{{#if this.isArray}}{{#unless this.arrayIndex}}
+    /**
+    * {{this.desc}}
+    */
+    public List<{{{this.retType}}}> {{this.arrayFieldName}} = new List<{{{this.retType}}}>();
+    {{/unless}}{{else}}
+    /**
+    * {{this.desc}}
+    */
+    public {{{this.retType}}} {{this.fieldName}};
+    {{/if}}{{/each}}
+
+    public override int GetID()
+    {
+        return 0;
+    }
+}

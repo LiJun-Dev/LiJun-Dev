@@ -1,0 +1,22 @@
+/******************************************************************************
+ * S2CProtocolRuntimeLoader  
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file in ExcelTools/
+ *****************************************************************************/
+
+using UnityEngine;
+using DecorationProj;
+
+public class S2CProtocolRuntimeLoader  
+{
+    [RuntimeInitializeOnLoadMethod]
+    static void OnRuntimeMethodLoad()
+    {
+        Debug.Log("Load the S2C protocols");
+
+	{{#each classList}}
+	S2CBaseProtocol.m_DecodeMap.Add("{{this.className}}", 	typeof(S2C{{this.className}}));
+        {{/each}}
+    }
+}

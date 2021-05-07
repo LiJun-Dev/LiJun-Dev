@@ -1,0 +1,55 @@
+/******************************************************************************
+ * C2S{{className}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file
+ *****************************************************************************/
+
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// C2S{{className}}
+/// Description: {{protocolDescription}}
+/// Protocol: {{protocol}}
+/// </summary>
+[System.Serializable]
+public class C2S{{className}} : C2SBaseProtocol
+{
+    readonly string protocol = "{{this.protocol}}";
+    readonly string protocolName = "{{className}}";
+
+    {{#each fieldArray}}
+    /// <summary>
+    /// {{this.desc}}
+    /// </summary>
+    {{#if this.defaultIsNew}}
+    public {{{this.retType}}} {{this.fieldName}} = new {{{this.retType}}}();
+    {{else}}{{#if this.hasDefaultValue}}
+    public {{{this.retType}}} {{this.fieldName}} = {{{this.defaultValue}}};
+    {{else}}
+	{{#if this.retType}}
+    public {{{this.retType}}} {{this.fieldName}};
+    {{/if}}{{/if}}{{/if}}{{/each}}
+
+    public override string Protocol
+    {
+        get
+        {
+            return protocol;
+        }
+    }
+
+    public override string ProtocolName
+    {
+        get
+        {
+            return protocolName;
+        }
+    }
+    
+    public override HttpType GetHttpType()
+    {
+        return {{this.classParam}};
+    }
+}

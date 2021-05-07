@@ -1,0 +1,71 @@
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using UnityEngine;
+using System.IO;
+
+public interface ITableOperate {
+
+}
+
+public sealed class TableException : IOException {
+	
+	internal TableException(string message) : base(message) {}
+	
+	internal static TableException ErrorReader(String fort, params object[] args) {
+		String error = String.Format(fort, args);
+		return new TableException(error);
+	}
+}
+
+[Serializable]
+public class TableManager {
+
+	//NOTE: call to init tables
+	public static void LoadTables(AssetBundle bundle) {
+		{{#each klassList}}Tab_{{this.fklassName}}.LoadTable(bundle, g_{{this.fklassName}});
+		{{/each}}
+	}
+
+	//NOTE: just use in Editor, table store in Resource Folder
+	public static void LoadTabelsInEditor(string filepath) {
+		ClearTableInEditor();
+		{{#each klassList}}Tab_{{this.fklassName}}.LoadTable(filepath, g_{{this.fklassName}});
+		{{/each}}
+	}
+
+	public static void LoadTables(Dictionary<string, string> assets)
+	{
+		ClearTableInEditor ();
+		{{#each klassList}}Tab_{{this.fklassName}}.LoadTable(assets, g_{{this.fklassName}});
+		{{/each}}
+	}
+
+	public static List<string> GetTableList()
+	{
+		List<string> tableList = new List<string> ();
+		{{#each klassList}}tableList.Add (Tab_{{this.fklassName}}.GetInstanceFile ());
+		{{/each}}
+		return tableList;
+	}
+
+	//NOTE: always clear before load
+	private static void ClearTableInEditor() {
+		{{#each klassList}}g_{{this.fklassName}}.Clear();
+		{{/each}}
+	}
+
+	{{#each klassList}}
+	private static Dictionary<int,Tab_{{this.fklassName}}> g_{{this.fklassName}} = new Dictionary<int,Tab_{{this.fklassName}}>();
+	public static Dictionary<int,Tab_{{this.fklassName}}> Get{{this.fklassName}}() {
+		return g_{{this.fklassName}};
+	}
+	public static Tab_{{this.fklassName}} Get{{this.fklassName}}ByID(int nIdex) {
+		if( Get{{this.fklassName}}().ContainsKey(nIdex)) {
+			return g_{{this.fklassName}}[nIdex] as Tab_{{this.fklassName}};
+		}
+ 		return null;
+ 	}
+ 	{{/each}}
+}
+

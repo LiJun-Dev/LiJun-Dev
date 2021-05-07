@@ -1,0 +1,58 @@
+// This code create by CodeEngine mrd.cyou.com ,don't modify
+package game.table;
+
+import java.util.HashMap;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cyou.mrd.service.Service;
+
+public class TableManager implements Service {
+  private static final Logger log = LoggerFactory.getLogger(TableManager.class);
+
+  @Override
+  public String getId() {
+    return "TableManager";
+  }
+
+  @Override
+  public void startup() throws Exception {
+    if (!TableManager.InitTable()) {
+      throw new Exception("init Table Error!!!!!!!!!!!!!");
+    }
+  }
+
+  @Override
+  public void shutdown() throws Exception {
+
+  }
+
+  {{#each klassList}}
+  public static HashMap<Integer, Table_{{this.klassName}}> g_{{this.klassName}} = new HashMap<>();
+
+  {{/each}}
+
+  public static boolean InitTable() throws Exception {
+    {{#each klassList}}
+    HashMap<Integer, Table_{{this.klassName}}> g_{{this.klassName}}_tmp = new HashMap<>();
+    if (!Table_{{this.klassName}}.loadTable(g_{{this.klassName}}_tmp)) {
+      log.error("Load Table:" + Table_{{this.klassName}}.TAB_FILE_DATA + "ERROR!!!");
+      return false;
+    } else {
+      log.debug("Load Table:" + Table_{{this.klassName}}.TAB_FILE_DATA + "OK!!!");
+    }
+    g_{{this.klassName}} = g_{{this.klassName}}_tmp;
+    
+    {{/each}}
+
+    return true;
+  }
+{{#each klassList}}
+  public static Table_{{this.klassName}} Get{{this.klassName}}ByID(int nIdex) {
+    return g_{{this.klassName}}.get(nIdex);
+  }
+{{/each}}
+
+
+}

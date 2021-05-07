@@ -1,0 +1,76 @@
+/******************************************************************************
+ * S2C{{className}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file
+ *****************************************************************************/
+
+using System.Collections.Generic;
+using UnityEngine;
+using DecorationProj;
+
+/// <summary>
+/// S2C{{className}}
+/// Description: {{protocolDescription}}
+/// Protocol: {{protocol}}
+/// </summary>
+
+namespace DecorationProj{
+[System.Serializable]
+public class S2C{{className}} : S2CBaseProtocol
+{
+    readonly string protocol = "{{this.protocol}}";
+    readonly string protocolName = "{{className}}";
+    
+
+    public override string Protocol
+    {
+        get
+        {
+            return protocol;
+        }
+    }
+
+    public override string ProtocolName
+    {
+        get
+        {
+            return protocolName;
+        }
+    }
+
+    {{#if this.defineData}}
+    {{#each fieldArray}}
+    /// <summary>
+    /// {{this.desc}}
+    /// </summary>
+    {{#if this.defaultIsNew}}
+    public {{{this.retType}}} {{this.fieldName}} = new {{{this.retType}}}();
+    {{else}}{{#if this.hasDefaultValue}}
+    public {{{this.retType}}} {{this.fieldName}} = {{{this.defaultValue}}};
+    {{else}}
+	{{#if this.retType}}
+    public {{{this.retType}}} {{this.fieldName}};
+    {{/if}}{{/if}}{{/if}}{{/each}}
+    
+    {{else}}
+    public Data data = null;
+    [System.Serializable]
+    public class Data
+    {
+        {{#each fieldArray}}
+    	/// <summary>
+    	/// {{this.desc}}
+    	/// </summary>
+    	{{#if this.defaultIsNew}}
+    	public {{{this.retType}}} {{this.fieldName}} = new {{{this.retType}}}();
+    	{{else}}{{#if this.hasDefaultValue}}
+    	public {{{this.retType}}} {{this.fieldName}} = {{{this.defaultValue}}};
+    	{{else}}
+	{{#if this.retType}}
+    	public {{{this.retType}}} {{this.fieldName}};
+    	{{/if}}{{/if}}{{/if}}{{/each}}
+    }
+    {{/if}}
+}
+}

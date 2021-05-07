@@ -1,0 +1,14 @@
+
+DATA_SCRIPT_HOME="Hotel1/Assets/HomeSubmodule/Scripts/Data/Configs/Home"
+DATA_JSON_HOME="Hotel1/Assets/Export/Configs/Home"
+DATA_SCRIPT_CK="Hotel1/Assets/Scripts/Data/Configs/Cooking"
+DATA_JSON_CK="Hotel1/Assets/Export/Configs/Cooking"
+DATA_SCRIPT_GLOBAL="Hotel1/Assets/HomeSubmodule/Scripts/Data/Configs/Global"
+DATA_JSON_GLOBAL="Hotel1/Assets/Export/Configs/Global"
+
+STORAGE_JSON="Hotel1/Storage"
+STORAGE_SCRIPT_HOME="Hotel1/Assets/Scripts/Hotel/Storage/AutoGeneration"
+STORAGE_SCRIPT_CK="Hotel1/Assets/CookingSubmodule/Scripts/Common/Storage/AutoGeneration"
+
+
+# file end needed

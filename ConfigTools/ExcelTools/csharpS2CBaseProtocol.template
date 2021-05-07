@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using Pomelo.DotNetClient;
+using SimpleJson;
+using System;
+
+public class S2CBaseProtocol : JSONCLASS 
+ {
+
+	public static S2CBaseProtocol GetHandler(string type)
+	{
+		switch(type)
+		{
+		{{#each klassList}}{{#if this.luaUse}}
+		case "{{this.protocolType}}":
+			return new S2CLuaProtocol();
+		{{else}}
+		case "{{this.protocolType}}":
+			return new S2C{{this.fklassName}}();
+		{{/if}}{{/each}}
+		default:
+			{
+				return new S2CLuaProtocol(); //S2CBaseProtocol();
+			}
+
+		}
+	}
+ 
+	public virtual JsonObject encode()
+	{ return new JsonObject(); }
+
+	public virtual void decode(JsonObject obj)
+	{ 	}
+
+	public virtual void OnMessageReceived()
+	{
+	}
+}

@@ -1,0 +1,124 @@
+//Do not modify
+using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.IO;
+using UnityEngine;
+
+[Serializable]
+public class Tab_{{klassName}} {
+    private const string TAB_FILE_DATA = "{{dataFileName}}";
+    public enum _ID {
+        INVLAID_INDEX = -1,
+        {{#each fieldArray}}
+        ID_{{this.fieldnameUpder}},
+        {{/each}}
+        MAX_RECORD
+    }
+
+    public static string GetInstanceFile () {
+        return TAB_FILE_DATA;
+    }
+
+    {{#each fieldArray}}{{#if this.isArray}}{{#unless this.arrayIndex}}
+    /**
+    * {{this.desc}} 
+    */
+    public readonly int m_{{this.arrayFieldnameUpderFirstWord}}_count = {{this.arrayLength}};
+    private {{this.retType}}[] m_{{this.arrayFieldnameUpderFirstWord}} = new {{this.retType}}[{{this.arrayLength}}];
+
+    public {{this.retType}} Get{{this.arrayFieldnameUpderFirstWord}}byIndex(int idx) {
+        if(idx>=0 && idx<{{this.arrayLength}}) {
+          return m_{{this.arrayFieldnameUpderFirstWord}}[idx];
+        }
+      {{#if this.isINT}}  
+        return -1;
+      {{else}}
+        {{#if this.isFloat}} 
+            return 0;
+        {{else}} 
+            return "";
+        {{/if}} 
+      {{/if}} 
+    } 
+    {{/unless}}{{else}}
+    /**
+    * {{this.desc}} 
+    */
+    private {{this.retType}} m_{{this.fieldnameUpderFirstWord}};
+    public {{this.retType}} {{this.fieldnameUpderFirstWord}} { get { return m_{{this.fieldnameUpderFirstWord}}; } }
+    {{/if}}{{/each}}
+
+
+    public static void LoadTable (AssetBundle bundle, Dictionary<int,Tab_{{klassName}}> dict) {
+        TextAsset asset = bundle.LoadAsset(GetInstanceFile(), typeof(TextAsset)) as TextAsset;
+        if(asset == null) {
+          Debug.LogError("TextAsset Error:" + GetInstanceFile());
+          return;
+        }
+        string[] dataRows = asset.text.Split('\n');
+        InitTable(dataRows, dict);
+    }
+
+    public static void LoadTable(string filepath, Dictionary<int,Tab_{{klassName}}> dict) {
+        TextAsset asset = Resources.Load(filepath + GetInstanceFile(), typeof(TextAsset)) as TextAsset;
+        if(asset == null) {
+            Debug.LogError("TextAsset Error:" + GetInstanceFile());
+            return;
+        }
+        string[] dataRows = asset.text.Split('\n');
+        InitTable(dataRows, dict);
+    }
+
+    public static void LoadTable(Dictionary<string, string> assets, Dictionary<int,Tab_{{klassName}}> dict) {
+        string szKey = GetInstanceFile ();
+        if(! assets.ContainsKey(szKey)) {
+            Debug.LogError("TextAsset Error:" + szKey);
+            return;
+        }
+        string[] dataRows = assets[szKey].Split('\n');
+        InitTable(dataRows, dict);
+    }
+
+    static void InitTable(string[] dataRows, Dictionary<int,Tab_{{klassName}}> dict) {
+        foreach(string line in dataRows) {
+            if(String.IsNullOrEmpty(line)) continue;
+            string[] strCol = line.Split('\t');
+
+            if (string.IsNullOrEmpty (strCol[0])) {
+                throw TableException.ErrorReader ("Read File{0} as key is Empty Fail!!!", GetInstanceFile ());
+            }
+
+            if ((int)_ID.MAX_RECORD != strCol.Length) {
+                throw TableException.ErrorReader ("Load {0} error as CodeSize:{1} not Equal DataSize:{2}", GetInstanceFile (), _ID.MAX_RECORD, strCol.Length);
+            }
+			
+            Tab_{{klassName}} _values = new Tab_{{klassName}} ();
+            {{#each fieldArray}}  
+            {{#if this.isArray}}  
+            {{#if this.isINT}}  
+            _values.m_{{this.arrayFieldnameUpderFirstWord}}[{{this.arrayIndex}}] = Convert.ToInt32 (strCol [(int)_ID.ID_{{this.fieldnameUpder}}]);
+            {{else}}
+            {{#if this.isFloat}}  
+            _values.m_{{this.arrayFieldnameUpderFirstWord}}[{{this.arrayIndex}}] = float.Parse (strCol [(int)_ID.ID_{{this.fieldnameUpder}}]);
+            {{else}}
+            _values.m_{{this.arrayFieldnameUpderFirstWord}}[{{this.arrayIndex}}] = strCol [(int)_ID.ID_{{this.fieldnameUpder}}];
+            {{/if}}
+            {{/if}}
+            {{else}}
+            {{#if this.isINT}}  
+            _values.m_{{this.fieldnameUpderFirstWord}} = Convert.ToInt32 (strCol [(int)_ID.ID_{{this.fieldnameUpder}}]);
+            {{else}}
+            {{#if this.isFloat}} 
+            _values.m_{{this.fieldnameUpderFirstWord}} = float.Parse (strCol [(int)_ID.ID_{{this.fieldnameUpder}}]); 
+            {{else}}
+            _values.m_{{this.fieldnameUpderFirstWord}} = strCol [(int)_ID.ID_{{this.fieldnameUpder}}];
+            {{/if}}
+            {{/if}}
+            {{/if}}
+            {{/each}}
+
+            dict.Add (int.Parse(strCol[0]), _values);
+        }
+    }
+}

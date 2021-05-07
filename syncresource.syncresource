@@ -1,0 +1,6 @@
+cd `pwd`/../Hotel1Res
+git stash
+git pull --rebase
+git stash pop
+cd `pwd`/../Hotel1/BuildTools
+./delete_then_sync_with_art_repo.sh

@@ -1,0 +1,122 @@
+// This code create by CodeEngine mrd.cyou.com ,don't modify
+package game.table;
+
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import cyou.mrd.Platform;
+import cyou.mrd.util.ConfigKeys;
+import cyou.mrd.util.Utils;
+
+public class Table_{{klassName}} {
+  public final static String TAB_FILE_DATA = "/{{dataFileName}}";
+// ${codeFileds} 
+  
+  {{#each fieldArray}}
+  public static final int ID_{{this.fieldnameUpder}} = {{idIndex}};
+  {{/each}}
+
+
+  public final int id;
+
+  public Table_{{klassName}}(int id) {
+    this.id = id;
+  }
+
+    
+  {{#each fieldArray}}{{#if this.isArray}}{{#unless this.arrayIndex}}
+  /**
+   * {{this.desc}} 
+   */
+  public {{this.retType}} m_{{this.arrayFieldnameUpderFirstWord}}[] = new {{this.retType}}[{{this.arrayLength}}];
+  public int Get{{this.arrayFieldnameUpderFirstWord}}Length() {
+     return m_{{this.arrayFieldnameUpderFirstWord}}.length;
+  }
+  public {{this.retType}} Get{{this.arrayFieldnameUpderFirstWord}}byIndex(int idx) {
+    if(idx>=0 && idx<{{this.arrayLength}}) return m_{{this.arrayFieldnameUpderFirstWord}}[idx];
+    {{#if this.isINT}}  
+     return -1;
+     {{else}}
+     return null;
+     {{/if}} 
+  } 
+  {{/unless}}{{else}}
+  /**
+   * {{this.desc}} 
+   */
+  private {{this.retType}} m_{{this.fieldnameUpderFirstWord}};
+  public {{this.retType}} Get{{this.fieldnameUpderFirstWord}}() {
+    return m_{{this.fieldnameUpderFirstWord}};
+  }
+  {{/if}}{{/each}}
+
+ 
+
+
+  public static Table_{{klassName}} createInstance(ArrayList<String> valuesList, Integer id) { 
+      Table_{{klassName}} _values = new Table_{{klassName}}(id);
+  
+ {{#each fieldArray}}  
+  {{#if this.isArray}}  
+      {{#if this.isINT}}  
+      _values.m_{{this.arrayFieldnameUpderFirstWord}}[{{this.arrayIndex}}] = Integer.parseInt(valuesList.get(ID_{{this.fieldnameUpder}}));
+      {{else}}
+      _values.m_{{this.arrayFieldnameUpderFirstWord}}[{{this.arrayIndex}}] = valuesList.get(ID_{{this.fieldnameUpder}});
+      {{/if}}
+  {{else}}
+      {{#if this.isINT}}  
+      _values.m_{{this.fieldnameUpderFirstWord}} = Integer.parseInt(valuesList.get(ID_{{this.fieldnameUpder}}));
+      {{else}}
+      _values.m_{{this.fieldnameUpderFirstWord}} = valuesList.get(ID_{{this.fieldnameUpder}});
+      {{/if}}
+   {{/if}}
+ {{/each}}
+      return _values; 
+ }
+
+
+  public static boolean loadTable(HashMap<Integer, Table_{{klassName}}> tableMap) {
+    try {
+      String fileName = TAB_FILE_DATA;
+      List<String> valueList =
+          Utils.getLinesFormTXTStarFrom0(Platform.getConfiguration().getString(
+              ConfigKeys.SERVER_DATA_DIR)
+              + fileName);
+      if (valueList == null || valueList.size() == 0) {
+        throw new Exception("Read " + fileName + " Error as not any data");
+      }
+      int nLine = 0;
+      for (String string : valueList) {
+        ArrayList<String> rLine = new ArrayList<>();
+        String strlist[] = string.split("\t");
+        if (strlist.length == 0) {
+          throw new Exception("Read " + fileName + " Error at line:" + nLine); 
+        }
+        String sKeyString = strlist[0];
+        if (sKeyString.isEmpty()) {
+          throw new Exception("Read File" + fileName + " as key is Empty Fail!!!");
+        }
+        Collections.addAll(rLine, strlist);
+
+        int id = Integer.parseInt(sKeyString);
+        tableMap.put(id, createInstance(rLine, id));
+
+        ++nLine;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+    return true;
+  }
+
+ 
+  @Override
+  public String toString() {
+    return "Table_{{klassName}}{" +
+        "id=" + id +
+        '}';
+  }
+}

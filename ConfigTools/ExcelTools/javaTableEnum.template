@@ -1,0 +1,38 @@
+// This code create by NewCodeEngine msl ,don't modify
+package game.table;
+
+public enum T{{klassName}} {
+// ${codeStr}
+{{#each lineContent}}
+    {{this.enumname}}({{this.id}}, "{{{this.msg}}}"),
+{{/each}}
+  ;
+
+  public static T{{klassName}} valueOf(int value) {
+    switch (value) {
+      
+{{#each lineContent}}
+    case {{this.id}}:
+        return {{this.enumname}};
+{{/each}}
+default:
+        return null;
+    }
+  }
+
+  private final int value;
+  private final String msg;
+
+  private T{{klassName}}(int value, String msg) {
+    this.value = value;
+    this.msg = msg;
+  }
+
+  public final int getNumber() {
+    return value;
+  }
+
+  public final String getMsg() {
+    return msg;
+  }
+}

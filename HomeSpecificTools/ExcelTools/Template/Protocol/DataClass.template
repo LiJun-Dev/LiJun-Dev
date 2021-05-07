@@ -1,0 +1,34 @@
+/******************************************************************************
+ * {{className}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file
+ *****************************************************************************/
+
+using System.Collections.Generic;
+using UnityEngine;
+
+/// <summary>
+/// {{className}}
+/// Description: {{protocolDescription}}
+/// </summary>
+[System.Serializable]
+{{#if this.hasClassParam}}
+public class {{className}} : {{classParam}}
+{{else}}
+public class {{className}}
+{{/if}}
+{
+     {{#each fieldArray}}
+    /// <summary>
+    /// {{this.desc}}
+    /// </summary>
+    {{#if this.defaultIsNew}}
+    public {{{this.retType}}} {{this.fieldName}} = new {{{this.retType}}}();
+    {{else}}{{#if this.hasDefaultValue}}
+    public {{{this.retType}}} {{this.fieldName}} = {{{this.defaultValue}}};
+    {{else}}
+	{{#if this.retType}}
+    public {{{this.retType}}} {{this.fieldName}};
+    {{/if}}{{/if}}{{/if}}{{/each}}
+}

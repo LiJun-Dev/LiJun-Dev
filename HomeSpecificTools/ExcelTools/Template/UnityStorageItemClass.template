@@ -1,0 +1,96 @@
+/******************************************************************************
+ * {{className}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file
+ *****************************************************************************/
+
+using System.Collections.Generic;
+using UnityEngine;
+using DragonU3DSDK.Storage;
+
+namespace DecorationProj{
+[System.Serializable]
+public class {{className}} : StorageBase
+{
+    {{#each fieldArray}}
+    /**
+    * {{this.desc}}
+    */
+    {{#if this.defaultIsNew}}
+    {{#if this.isStorageList}}
+    public {{{this.retType}}} _{{this.fieldName}} =  new List< {{{this.realType}}} >();
+    {{else}}
+    public {{{this.retType}}} _{{this.fieldName}} = new {{{this.retType}}}();
+    {{/if}}
+    {{else}} {{#if this.hasDefaultValue}}
+    public {{{this.retType}}} _{{this.fieldName}} = {{{this.defaultValue}}};
+    {{else}}{{#if this.retType}}
+    public {{{this.retType}}} _{{this.fieldName}};
+    {{/if}}{{/if}}{{/if}}
+    {{#if this.useDirtyFlag}}
+
+    protected StorageDirtyFlag {{this.fieldName}}flag = new StorageDirtyFlag();
+    
+    {{/if}}
+    {{#if this.retType}}
+    public {{{this.retType}}} {{this.fieldName}}
+    {
+        get
+        {
+            return _{{this.fieldName}};
+        }
+        set
+        {
+            {{#if this.useDirtyFlag}}
+            {{this.fieldName}}flag.isDirty = true;
+            {{else}}
+            {{/if}}
+            _{{this.fieldName}} = value;
+        }
+    }
+    {{/if}}
+    {{/each}}
+
+    {{#if useSplit}}
+    public void ToJsonLite(string key, Dictionary<string, object> items)
+    {
+        {{#each fieldArray}}
+        {{#if this.isStorage}}
+        {{else}} {{#if this.useDirtyFlag}}
+
+        if ({{this.fieldName}}flag.isDirty)
+        {
+            {{#if this.defaultIsNew}}  
+            items.Add(string.Format("{0}.{1}", key, "_{{this.fieldName}}"), JsonUtility.ToJson({{this.fieldName}}));
+            {{else}}
+            items.Add(string.Format("{0}.{1}", key, "_{{this.fieldName}}"), {{this.fieldName}});
+            {{/if}}
+        }
+
+        {{/if}} {{#if this.isStorageList}}
+
+        if ({{this.fieldName}} != null && {{this.fieldName}}.Count != 0)
+        {
+            for(int i = 0; i < {{this.fieldName}}.Count; i++)
+            {
+                if({{this.fieldName}}[i].IsDirty)
+                {
+                    {{#if this.useSplitSub}}
+                    {{this.fieldName}}[i].ToJsonLite(string.Format("{0}.{1}.{2}", key, "_{{this.fieldName}}", i),items);
+                    {{else}} {{#if this.useSplit}}              
+                    items.Add(string.Format("{0}.{1}.{2}",key,"_{{this.fieldName}}",i), JsonUtility.ToJson({{this.fieldName}}[i]));
+                    {{/if}}{{/if}}
+                    
+                }
+            }
+        }
+        else
+        {
+            items.Add(string.Format("{0}.{1}", key, "_{{this.fieldName}}"), "[]");
+        }{{/if}}
+        {{/if}}{{/each}}
+    }
+    {{/if}}
+}
+}

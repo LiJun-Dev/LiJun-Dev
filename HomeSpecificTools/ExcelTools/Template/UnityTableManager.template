@@ -1,0 +1,111 @@
+/******************************************************************************
+ * {{managerName}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ *****************************************************************************/
+
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+[System.Serializable]
+public class {{managerName}}
+{
+
+   public static List<T> DeSerialize<T>(string json)
+   {
+       if (!json.StartsWith("{", System.StringComparison.Ordinal))
+       {
+           json = "{\"v\":" + json + "}";
+       }
+
+       WrapperList<T> list = JsonUtility.FromJson<WrapperList<T>>(json);
+       return list.v;
+   }
+
+   [System.Serializable]
+   private class WrapperList<T>
+   {
+       public List<T> v = new List<T>();
+   }	
+//NOTE: call to init tables
+	public static void LoadTables(AssetBundle bundle)
+	{
+		{{#each classList}}
+		g_{{this.className}} = Table{{this.className}}.LoadTable(bundle);
+		{{/each}}
+	}
+
+	//NOTE: just use in Editor, table store in Resource Folder
+	public static void LoadTablesInEditor(string filePath)
+	{
+		ClearTablesInEditor();
+		{{#each classList}}
+		g_{{this.className}} = Table{{this.className}}.LoadTable(filePath);
+		{{/each}}
+	}
+
+	public static void LoadTables(Dictionary<string, string> assets)
+	{
+		ClearTablesInEditor ();
+		{{#each classList}}
+		g_{{this.className}} = Table{{this.className}}.LoadTable(assets);
+		{{/each}}
+	}
+
+	public static List<string> GetTableList()
+	{
+		List<string> tableList = new List<string> ();
+		{{#each classList}}
+		tableList.Add (Table{{this.className}}.GetInstanceFile ());
+		{{/each}}
+		return tableList;
+	}
+
+	//NOTE: always clear before load
+	private static void ClearTablesInEditor()
+	{
+		{{#each classList}}
+		g_{{this.className}}.Clear();
+		{{/each}}
+	}
+
+	{{#each classList}}
+	private static List<Table{{this.className}}> g_{{this.className}} = new List<Table{{this.className}}>();
+	public static List<Table{{this.className}}> Get{{this.className}}List()
+	{
+		return g_{{this.className}};
+	}
+	public static Table{{this.className}} Get{{this.className}}ByIndex(int idx)
+	{
+		if(g_{{this.className}} != null && g_{{this.className}}.Count > idx && idx >= 0)
+		{
+			return g_{{this.className}}[idx];
+		}
+ 		return null;
+ 	}
+ 	public static Table{{this.className}} Get{{this.className}}ByID(int id)
+	{
+		Table{{this.className}} ret = null;
+		if(g_{{this.className}} != null)
+		{
+			ret = g_{{this.className}}.Find((Table{{this.className}} table) =>
+			{
+				return (table.id == id);
+			});
+		}
+		return ret;
+	}
+	public static Table{{this.className}} Get{{this.className}}(System.Predicate<Table{{this.className}}> condition)
+	{
+		Table{{this.className}} ret = null;
+		if (g_{{this.className}} != null)
+		{
+			ret = g_{{this.className}}.Find(condition);
+		}
+		return ret;
+	}
+ 	{{/each}}
+}
+

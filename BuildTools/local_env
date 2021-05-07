@@ -1,0 +1,4 @@
+#UNITY_EXE=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+UNITY_EXE=/Applications/Unity/Hub/Editor/2018.4.24f1/Unity.app/Contents/MacOS/Unity
+LOCAL_LOG_FILE=Hotel1/LOG/iOS_Debug.log
+# file end needed

@@ -1,0 +1,141 @@
+using System.Collections;
+using System.Collections.Generic;
+using Pomelo.DotNetClient;
+using SimpleJson;
+using System;
+
+/**
+* {{pDes}} 
+* Type: {{pType}} 
+*/
+public class S2C{{klassName}} : S2CBaseProtocol
+{   
+    public const string _type = "{{pType}}";
+    {{#each fieldArray}}
+    /**
+    * {{this.desc}} 
+    */
+    {{#if this.isArray}}
+    private {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}}  _{{this.fieldnameUpderFirstWord}} = new {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}}();
+    public {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}} {{this.fieldnameUpderFirstWord}} { get { return _{{this.fieldnameUpderFirstWord}}; } } {{else}} {{#if this.isConst}}
+    public {{this.retType}} {{this.fieldnameUpderFirstWord}} = "{{this.defaultvalue}}";  {{else}} 
+    private {{this.retType}} _{{this.fieldnameUpderFirstWord}} {{#if this.hasDefaultvalue}} = {{#if this.isString}} "{{this.defaultvalue}}" {{else}} {{this.defaultvalue}} {{/if}} {{/if}};
+    public {{this.retType}} {{this.fieldnameUpderFirstWord}} { get { return _{{this.fieldnameUpderFirstWord}}; } set { _{{this.fieldnameUpderFirstWord}} = value; } } {{/if}} {{/if}} {{/each}}
+
+    public override void decode(JsonObject obj)
+    {   {{#each fieldArray}} {{#if this.isConst}}{{else}}
+        if(obj.ContainsKey("{{this.fieldname}}"))
+        {
+            {{#if this.isArray}} {{#if this.arrayDepthM2}}
+            JsonArray list0 = (JsonArray)obj["{{this.fieldname}}"];
+            List<List<{{this.retType}}>> temp0 = _{{this.fieldnameUpderFirstWord}};
+            for(int i0 = 0; i0 < list0.Count; ++i0)
+            {
+                JsonArray list2 = (JsonArray)list0[i0];
+                temp0.Add(new List<{{this.retType}}>());
+                List<{{this.retType}}>temp1 = temp0[i0];
+                for(int i2 = 0; i2 < list2.Count; ++i2)
+                {
+                    {{#if this.isINT}}
+                    temp1.Add(Convert.ToInt32(list2[i2])); {{else}}
+                    {{#if this.isLong}}
+                    temp1.Add(Convert.ToInt64(list2[i2])); {{else}}
+                    {{#if this.isFloat}}
+                    temp1.Add(float.Parse(list2[i2])); {{else}}
+                    {{#if this.isString}}
+                    temp1.Add(Convert.ToString(list2[i2])); {{else}}
+                    {{#if this.isBool}} 
+                    temp1.Add((bool)Convert.ToBoolean(list2[i2]));  {{else}}
+                    {{#if this.isJObject}}
+                    {{this.retType}} oneObj = new {{this.retType}}();
+                    oneObj.decode((JsonObject)list2[i2]);
+                    temp1.Add(oneObj);{{else}}
+                    temp1.Add((JsonObject)list2[i2]);{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}
+                }
+
+            } {{else}} {{#if this.arrayDepthM3}}
+            JsonArray list0 = (JsonArray)obj["{{this.fieldname}}"];
+            List<List<List<{{this.retType}}>>> temp0 = _{{this.fieldnameUpderFirstWord}};
+            for(int i0 = 0; i0 < list0.Count; ++i0)
+            {
+                JsonArray list1 = (JsonArray)list0[i0];
+                temp0.Add(new List<List<{{this.retType}}>>());
+                List<List<{{this.retType}}>> temp = temp0[i0];
+                for(int i1 = 0; i1 < list1.Count; ++i1)
+                {
+                    JsonArray list2 = (JsonArray)list1[i1];
+                    temp.Add(new List<{{this.retType}}>());
+                    List<{{this.retType}}>temp1 = temp[i1];
+                    for(int i2 = 0; i2 < list2.Count; ++i2)
+                    {
+                        {{#if this.isINT}}
+                        temp1.Add(Convert.ToInt32(list2[i2])); {{else}}
+                        {{#if this.isLong}}
+                        temp1.Add(Convert.ToInt64(list2[i2])); {{else}}
+                        {{#if this.isFloat}}
+                        temp1.Add(float.Parse(list2[i2])); {{else}}
+                        {{#if this.isString}}
+                        temp1.Add(Convert.ToString(list2[i2])); {{else}}
+                        {{#if this.isBool}} 
+                        temp1.Add((bool)Convert.ToBoolean(list2[i2]));  {{else}}
+                        {{#if this.isJObject}}
+                        {{this.retType}} oneObj = new {{this.retType}}();
+                        oneObj.decode((JsonObject)list2[i2]);
+                        temp1.Add(oneObj);{{else}}
+                        temp1.Add((JsonObject)list2[i2]);{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}
+                    }
+                }
+            } {{else}}
+            JsonArray list0 = (JsonArray)obj["{{this.fieldname}}"];
+            List<{{this.retType}}>temp1 = _{{this.fieldnameUpderFirstWord}};
+            for(int i0 = 0; i0 < list0.Count; ++i0)
+            {
+                {{#if this.isINT}}
+                temp1.Add(Convert.ToInt32(list0[i0])); {{else}}
+                {{#if this.isLong}}
+                temp1.Add(Convert.ToInt64(list2[i2])); {{else}}
+                {{#if this.isFloat}}
+                temp1.Add(float.Parse(list2[i2])); {{else}}
+                {{#if this.isString}}
+                temp1.Add(Convert.ToString(list0[i0])); {{else}}
+                {{#if this.isBool}} 
+                temp1.Add((bool)Convert.ToBoolean(list0[i0]));  {{else}}
+                {{#if this.isJObject}}
+                {{this.retType}} oneObj = new {{this.retType}}();
+                oneObj.decode((JsonObject)list0[i0]);
+                temp1.Add(oneObj);{{else}}
+                temp1.Add((JsonObject)list0[i0]);{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}
+            }{{/if}}{{/if}}{{else}}{{#if this.isINT}}
+            _{{this.fieldnameUpderFirstWord}} = (Convert.ToInt32(obj["{{this.fieldname}}"])); {{else}}
+            {{#if this.isLong}}
+            _{{this.fieldnameUpderFirstWord}} = (Convert.ToInt64(obj["{{this.fieldname}}"])); {{else}}
+            {{#if this.isFloat}}
+            _{{this.fieldnameUpderFirstWord}} = (float.Parse(obj["{{this.fieldname}}"])); {{else}}
+            {{#if this.isString}}
+            _{{this.fieldnameUpderFirstWord}} = (Convert.ToString(obj["{{this.fieldname}}"])); {{else}}
+            {{#if this.isBool}} 
+            _{{this.fieldnameUpderFirstWord}} = ((bool)Convert.ToBoolean(obj["{{this.fieldname}}"]));  {{else}}
+            {{#if this.isJObject}}
+            _{{this.fieldnameUpderFirstWord}} = new {{this.retType}}();
+            _{{this.fieldnameUpderFirstWord}}.decode((JsonObject)obj["{{this.fieldname}}"]);{{else}}
+            _{{this.fieldnameUpderFirstWord}} = (JsonObject)(obj["{{this.fieldname}}"]);{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}{{/if}}
+            {{/if}}
+        }{{/if}}{{/each}} 
+    }
+
+    public override void OnMessageReceived()
+    {
+        NotificationCenter.Instance.Notification<S2C{{klassName}}Message>().Data(this).Broadcast() ; 
+    }
+}
+
+//messages:
+public class S2C{{klassName}}Message: Subject<S2C{{klassName}}Message>
+{
+    public S2C{{klassName}} protocol { get; private set; }
+    public S2C{{klassName}}Message Data(S2C{{klassName}} tprotocol)
+    {
+        this.protocol = tprotocol;
+        return this;
+    }
+}

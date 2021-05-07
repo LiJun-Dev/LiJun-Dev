@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using Pomelo.DotNetClient;
+using SimpleJson;
+using System;
+
+
+public class C2SBaseProtocol : JSONCLASS 
+ {
+	public void Send()
+	{
+		SVNetConnection.Instance.SendData(this.ProtocolType(), this.GetRoute(), this.encode(), this.NeedReply);
+	}
+ 
+	public virtual JsonObject encode(){ return new JsonObject();}
+
+	public virtual void decode(JsonObject obj){ }
+
+	public virtual string GetRoute()
+	{ 
+		return null;
+	}
+
+	public virtual string ProtocolType()
+	{
+		return null;
+	}
+
+	public virtual bool NeedReply
+	{
+		get {
+			return true;
+		}
+	}
+}
+

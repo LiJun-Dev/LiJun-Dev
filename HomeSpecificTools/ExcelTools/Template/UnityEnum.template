@@ -1,0 +1,13 @@
+/******************************************************************************
+ * Enum{{className}}
+ *
+ * Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+ * Change template file or ask mingxu.zhang
+ *****************************************************************************/
+
+public enum Enum{{className}}
+{
+{{#each lineContent}}
+	{{this.key}} = {{this.value}},
+{{/each}}
+}

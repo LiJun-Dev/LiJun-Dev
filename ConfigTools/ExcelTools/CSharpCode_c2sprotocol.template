@@ -1,0 +1,85 @@
+using System.Collections;
+using System.Collections.Generic;
+using Pomelo.DotNetClient;
+using SimpleJson;
+using System;
+
+/**
+* {{pDes}} 
+* Type: {{pType}} 
+*/
+public class C2S{{klassName}} : C2SBaseProtocol
+{
+    const string _type = "{{pType}}";
+    {{#each fieldArray}}
+    /**
+    * {{this.desc}} 
+    */
+    {{#if this.isArray}}
+    private {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}}  _{{this.fieldnameUpderFirstWord}} = new {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}}();
+    public {{#for 0 this.arrayDepth 1}} List< {{/for}} {{this.retType}} {{#for 0 this.arrayDepth 1}} > {{/for}} {{this.fieldnameUpderFirstWord}} { get { return _{{this.fieldnameUpderFirstWord}}; } } {{else}} {{#if this.isConst}}
+    public {{this.retType}} {{this.fieldnameUpderFirstWord}} = "{{this.defaultvalue}}";  {{else}} 
+    private {{this.retType}} _{{this.fieldnameUpderFirstWord}} {{#if this.hasDefaultvalue}} = {{#if this.isString}} "{{this.defaultvalue}}" {{else}} {{this.defaultvalue}} {{/if}} {{/if}};
+    public {{this.retType}} {{this.fieldnameUpderFirstWord}} { get { return _{{this.fieldnameUpderFirstWord}}; } set { _{{this.fieldnameUpderFirstWord}} = value; } } {{/if}} {{/if}} {{/each}}
+
+    public override string GetRoute()
+    { 
+        return Route;
+    }
+
+    public override string ProtocolType()
+    {
+        return _type;
+    }
+
+    public override bool NeedReply
+    {
+        get {
+            return {{#if this.pNeedReply}}true{{else}}false{{/if}};
+        }
+    }
+
+    public override JsonObject encode()
+    { 
+        JsonObject obj = new JsonObject();
+        obj.Add("type", _type); {{#each fieldArray}} {{#if this.isArray}} 
+        JsonArray list = new JsonArray(); {{#if this.arrayDepthM2}} 
+        for(int i = 0; i < _{{this.fieldnameUpderFirstWord}}.Count; ++i)
+        {
+            List<{{this.retType}}> _data0 = _{{this.fieldnameUpderFirstWord}}[i];
+            JsonArray list0 = new JsonArray();
+            for(int i0 = 0; i0 < _data0.Count; ++i0)
+            {
+                list0.Add({{#if this.isJObject}}_data0[i0].encode(){{else}}_data0[i0]{{/if}});
+            }
+            list.Add(list0);
+        }{{else}} {{#if this.arrayDepthM3}}
+        for(int i = 0; i < _{{this.fieldnameUpderFirstWord}}.Count; ++i)
+        {
+            List<List<{{this.retType}}>> _data0 = _{{this.fieldnameUpderFirstWord}}[i];
+            JsonArray list0 = new JsonArray();
+            for(int i0 = 0; i0 < _data0.Count; ++i0)
+            {
+                List<{{this.retType}}> _data1 = _data0[i0];
+                JsonArray list1 = new JsonArray();
+                for(int i1 = 0; i1 < _data1.Count; ++i1)
+                {
+                    list1.Add({{#if this.isJObject}}_data1[i1].encode(){{else}}_data1[i1]{{/if}});
+                }
+                list0.Add(list1);
+            }
+            list.Add(list0);
+        }
+        {{else}}  
+        for(int i = 0; i < _{{this.fieldnameUpderFirstWord}}.Count; ++i)
+        {
+            list.Add({{#if this.isJObject}}_{{this.fieldnameUpderFirstWord}}[i].encode(){{else}}_{{this.fieldnameUpderFirstWord}}[i]{{/if}});
+        }
+        {{/if}}{{/if}} 
+        obj.Add("{{this.fieldname}}", list); {{else}}  
+        obj.Add("{{this.fieldname}}", {{#if this.isJObject}}_{{this.fieldnameUpderFirstWord}}.encode(){{else}}{{#if this.isConst}}{{this.fieldnameUpderFirstWord}}{{else}}_{{this.fieldnameUpderFirstWord}}{{/if}}{{/if}} );
+        {{/if}}
+        {{/each}}
+        return obj;
+    }
+}

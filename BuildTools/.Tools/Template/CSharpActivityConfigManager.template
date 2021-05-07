@@ -1,0 +1,36 @@
+/************************************************
+ * {{this.nameSpace}} Config Manager class : {{this.managerClassName}}
+ * This file is can not be modify !!!
+ * If there is some problem, ask bin.guo.
+ ************************************************/
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using DragonU3DSDK;
+using DragonU3DSDK.Asset;
+using Newtonsoft.Json;
+using UnityEngine;
+
+namespace DragonPlus.Config.{{this.nameSpace}}
+{
+    public class {{{this.managerClassName}}} : Manager<{{{this.managerClassName}}}>
+    {   
+        {{#each fieldArray}}
+        public List<{{{this.configClassName}}}> {{{this.configClassName}}}List;
+        {{/each}}
+        public void InitConfig(string configJson)
+        {
+            if (String.IsNullOrEmpty(configJson))
+            {
+                DebugUtil.LogError("{{{this.managerClassName}}} load config error!");
+                return;
+            }
+
+            var table = JsonConvert.DeserializeObject<Hashtable>(configJson);
+            {{#each fieldArray}}
+            {{{this.configClassName}}}List = JsonConvert.DeserializeObject<List<{{{this.configClassName}}}>>(JsonConvert.SerializeObject(table["{{{this.lowersheetname}}}"]));
+            {{/each}}
+        }
+    }
+}

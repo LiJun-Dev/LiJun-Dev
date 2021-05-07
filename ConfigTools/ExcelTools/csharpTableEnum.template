@@ -1,0 +1,8 @@
+//Auto Generate File, Do NOT Modify!!!!!!!!!!!!!!!
+
+
+public enum {{klassName}} {  
+{{#each lineContent}}
+    	{{this.enumname}} = {{this.id}},
+{{/each}}
+}
